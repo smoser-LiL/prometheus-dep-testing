@@ -1,0 +1,41 @@
+name: Generate NOTICE.md
+
+on:
+  push:
+    branches:
+      - main  # Adjust this to your main branch name
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      # Install dependencies, this might vary depending on your project setup
+      - name: Install dependencies
+        run: npm install
+
+      # Generate the NOTICE.md file
+      - name: Generate NOTICE.md
+        run: |
+          echo "# NOTICE" > NOTICE.md
+          echo "This file contains notices for all software dependencies used in this project." >> NOTICE.md
+          echo "" >> NOTICE.md
+          # Add more commands here to gather information about dependencies
+          # For example, if you're using npm, you can run `npm ls --prod --json` to get a JSON representation of your dependencies
+
+      # Commit and push the changes
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add NOTICE.md
+          git commit -m "Generate NOTICE.md"
+          git push
